@@ -6,6 +6,7 @@ prompt-toolkit==1.0.14
 Pygments==2.13.0
 PyInquirer==1.0.3
 pyradios==1.0.2
+python-mpv==1.0.1
 regex==2022.9.13
 requests==2.28.1
 six==1.16.0

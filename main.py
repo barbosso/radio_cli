@@ -4,6 +4,8 @@ from examples import custom_style_2
 from prompt_toolkit.validation import Validator, ValidationError
 from pyradios import RadioBrowser
 import os
+import mpv
+
 
 
 class NumberValidator(Validator):
@@ -19,6 +21,11 @@ class NumberValidator(Validator):
 st_dict = {}
 st_list = []
 st_json = []
+
+def mpv_player(station):
+    player = mpv.MPV(ytdl=True, input_default_bindings=True, video=False, terminal=True, input_terminal=True)
+    player.play(station)
+    player.wait_for_playback()
 
 
 def search_stations_by_tag(tag):
@@ -53,7 +60,7 @@ def choice_tag():
             'type': 'list',
             'name': 'radio_tag',
             'message': 'choice tag',
-            'choices': ['russian', 'relax', 'rock', 'disco', 'pop', 'house', 'electronic', 'techno', 'chanson', 'trance', 'future', 'bass', 'news', 'jazz', 'club', 'hits', 'dance', 'hip-hop', 'rap']
+            'choices': ['russian(not all ru stations)', 'relax', 'rock', 'disco', 'pop', 'house', 'electronic', 'techno', 'chanson', 'trance', 'future', 'bass', 'news', 'jazz', 'club', 'hits', 'dance', 'hip-hop', 'rap']
         }
     ]
     answers = prompt(questions, style=custom_style_2)
@@ -71,11 +78,11 @@ def play_radio():
     }]
     answers = prompt(questions, style=custom_style_2)
     station = st_dict[answers.get("Choice_Station")]
-    os.system(f'mpv --no-video {station} > /dev/null')
-
+    # os.system(f'mpv --no-video {station} > /dev/null')
+    mpv_player(station)
 
 def favorites():
-    f = open('favorites.json')
+    f = open(os.path.expanduser("~/.config/favorites.json"), "r+")
     data = json.load(f)
     names = []
     stations = {}
@@ -95,7 +102,9 @@ def favorites():
     ]
     answers = prompt(questions, style=custom_style_2)
     station = stations[answers.get("favorites")]
-    os.system(f'mpv --no-video {station} > /dev/null')
+    # os.system(f'mpv --no-video {station} > /dev/null')
+    mpv_player(station)
+
 
 
 def main():
@@ -110,7 +119,7 @@ def main():
 
     answers = prompt(questions, style=custom_style_2)
     if answers.get("user_option") == "Favorites":
-        if os.path.exists('favorites.json') is True:
+        if os.path.exists(os.path.expanduser("~/.config/favorites.json")):
             favorites()
         else:
             print('File favorites.json does not exist')
