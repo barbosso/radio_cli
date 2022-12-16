@@ -1,4 +1,5 @@
 import json
+from pytube import Playlist
 from PyInquirer import prompt
 from examples import custom_style_2
 from prompt_toolkit.validation import Validator, ValidationError
@@ -26,6 +27,16 @@ def mpv_player(station):
     player = mpv.MPV(ytdl=True, input_default_bindings=True, video=False, terminal=True, input_terminal=True)
     player.play(station)
     player.wait_for_playback()
+
+    
+def mpv_player_playlist(station):
+    player = mpv.MPV(ytdl=True, input_default_bindings=True, video=False, terminal=True, input_terminal=True)
+    playlist = Playlist(station)
+    for i in playlist.video_urls:
+        player.playlist_append(i)
+    player.playlist_pos = 0
+    while True:
+        player.wait_for_playback()
 
 
 def search_stations_by_tag(tag):
@@ -103,7 +114,11 @@ def favorites():
     answers = prompt(questions, style=custom_style_2)
     station = stations[answers.get("favorites")]
     # os.system(f'mpv --no-video {station} > /dev/null')
-    mpv_player(station)
+    # mpv_player(station)
+    if "playlist" in station:
+        mpv_player_playlist(station)
+    else:
+        mpv_player(station)
 
 
 
