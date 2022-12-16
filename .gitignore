@@ -160,3 +160,5 @@ cython_debug/
 .idea/
 .vscode/
 result.json
+test.py
+.gitignore
