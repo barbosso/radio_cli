@@ -4,19 +4,9 @@ from PyInquirer import prompt
 from examples import custom_style_2
 from prompt_toolkit.validation import Validator, ValidationError
 from pyradios import RadioBrowser
+from tempfile import gettempdir
 import os
 import mpv
-
-
-
-class NumberValidator(Validator):
-
-    def validate(self, document):
-        try:
-            int(document.text)
-        except ValueError:
-            raise ValidationError(message="Please enter a number",
-                                  cursor_position=len(document.text))
 
 
 st_dict = {}
@@ -43,6 +33,7 @@ def search_stations_by_tag(tag):
     rb = RadioBrowser()
     stations = rb.search(countrycode="ru")
     count = 0
+    tmpdir = gettempdir()
     for i in stations:
 
         if tag in i["tags"]:
@@ -61,7 +52,7 @@ def search_stations_by_tag(tag):
             st_list.append(station_name)
             st_dict.update({station_name: station_url})
             # print(st_list)
-    with open(f"/tmp/station_{tag}.json", "w") as file:
+    with open(f"{tmpdir}/station_{tag}.json", "w") as file:
         json.dump(st_json, file, indent=4, ensure_ascii=False)
 
 
