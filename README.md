@@ -15,8 +15,5 @@ ImportError: cannot import name 'Mapping' from 'collections'
 on
 
 ```
-try:
-    from collections.abc import Mapping
-except ImportError:
-    from collections import Mapping
+from collections.abc import Mapping
 ```
