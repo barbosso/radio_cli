@@ -1,5 +1,5 @@
 import json
-from pytube import Playlist
+from pytube import Playlist, YouTube
 from PyInquirer import prompt
 from examples import custom_style_2
 from prompt_toolkit.validation import Validator, ValidationError
@@ -20,13 +20,16 @@ def mpv_player(station):
 
     
 def mpv_player_playlist(station):
-    player = mpv.MPV(ytdl=True, input_default_bindings=True, video=False, terminal=True, input_terminal=True)
+    player = mpv.MPV(ytdl=True, input_default_bindings=True, video=False, terminal=True, input_terminal=True, )
     playlist = Playlist(station)
     for i in playlist.video_urls:
         player.playlist_append(i)
     player.playlist_pos = 0
     while True:
+        yt = YouTube(f"https://www.youtube.com/{player.filename}")
+        player.print_text('\n' + yt.title + '\n')
         player.wait_for_playback()
+        
 
 
 def search_stations_by_tag(tag):
